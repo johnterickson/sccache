@@ -22,7 +22,7 @@ jobs:
           move target\release\sccache.pdb drop\
       - task: PublishPipelineArtifact@0
         inputs:
-          artifactName: 'sccache' 
+          artifactName: sccache_$(TARGET) 
           targetPath: drop
 
   - job: mac_linux
@@ -46,6 +46,6 @@ jobs:
           mv target\release\sccache drop\
       - task: PublishPipelineArtifact@0
         inputs:
-          artifactName: 'sccache' 
+          artifactName: sccache_$(TARGET) 
           targetPath: drop
         
