@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mozilla/sccache.svg?branch=master)](https://travis-ci.org/mozilla/sccache) [![Build status](https://ci.appveyor.com/api/projects/status/h4yqo430634pmfmt?svg=true)](https://ci.appveyor.com/project/luser/sccache2)
+[![Build Status](https://dev.azure.com/johnterickson/rust-lang/_apis/build/status/sccache?branchName=master)](https://dev.azure.com/johnterickson/rust-lang/_build/latest?definitionId=16&branchName=master)
 
 sccache - Shared Compilation Cache
 ==================================
