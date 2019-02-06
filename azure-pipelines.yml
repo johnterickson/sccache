@@ -39,6 +39,7 @@ jobs:
       - script: |
           curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host $TARGET
           export PATH=$PATH:~/.cargo/bin
+          export OPENSSL_STATIC=yes
           cargo build --features=$CARGO_FEATURES --release
           mkdir drop
           mv target/release/sccache ./drop/
