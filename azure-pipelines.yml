@@ -1,0 +1,38 @@
+# Recommened editor for this file: https://github.com/Microsoft/azure-pipelines-vscode
+name: cargo
+variables:
+  CARGO_FEATURES: s3,azure
+jobs:
+  - job: windows
+    strategy:
+      matrix:
+        x86_x64_stable:
+          TARGET: x86_64-pc-windows-msvc
+    pool:
+      vmImage: vs2017-win2016
+    steps:
+      - powershell: Invoke-WebRequest -Uri https://win.rustup.rs/ -OutFile rustup-init.exe
+      - script: |
+          rustup-init.exe -y --default-host %TARGET%
+          set PATH=%PATH%;%USERPROFILE%\.cargo\bin
+          cargo build --features=%CARGO_FEATURES% --release
+          cargo test --features=%CARGO_FEATURES% --release
+
+  - job: mac_linux
+    strategy:
+      matrix:
+        x86_x64_stable:
+          IMAGE: ubuntu-16.04
+          TARGET: x86_64-unknown-linux-gnu
+        osx:
+          IMAGE: macos-10.13
+          TARGET: x86_64-apple-darwin
+    pool:
+      vmImage: $[ variables['IMAGE'] ] 
+    steps:
+      - script: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host $TARGET
+          export PATH=$PATH:~/.cargo/bin
+          cargo build --features=$CARGO_FEATURES --release
+          cargo test --features=$CARGO_FEATURES --release
+        
