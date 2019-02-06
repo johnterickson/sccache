@@ -41,7 +41,7 @@ jobs:
           export PATH=$PATH:~/.cargo/bin
           cargo build --features=$CARGO_FEATURES --release
           mkdir drop
-          mv target\release\sccache drop\
+          mv target/release/sccache ./drop/
       - task: PublishPipelineArtifact@0
         inputs:
           artifactName: sccache_$(TARGET) 
