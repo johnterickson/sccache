@@ -18,7 +18,7 @@ jobs:
           set PATH=%PATH%;%USERPROFILE%\.cargo\bin
           cargo build --target %TARGET% --features=%CARGO_FEATURES% --release
           mkdir drop
-          move target\%TARGET%\release\sccache.exe drop\stable-$TARGET.sccache.exe
+          move target\%TARGET%\release\sccache.exe drop\stable-%TARGET%.sccache.exe
           move target\%TARGET%\release\sccache.pdb drop\
       - task: PublishPipelineArtifact@0
         inputs:
