@@ -18,8 +18,8 @@ jobs:
           set PATH=%PATH%;%USERPROFILE%\.cargo\bin
           cargo build --target %TARGET% --features=%CARGO_FEATURES% --release
           mkdir drop
-          move target\release\sccache.exe drop\stable-$TARGET.sccache.exe
-          move target\release\sccache.pdb drop\
+          move target\%TARGET%\release\sccache.exe drop\stable-$TARGET.sccache.exe
+          move target\%TARGET%\release\sccache.pdb drop\
       - task: PublishPipelineArtifact@0
         inputs:
           artifactName: sccache_$(TARGET) 
@@ -53,7 +53,7 @@ jobs:
           export OPENSSL_STATIC=yes
           cargo build --target $TARGET --features=$CARGO_FEATURES --release
           mkdir drop
-          mv target/release/sccache ./drop/stable-$TARGET.sccache
+          mv target/$TARGET/release/sccache ./drop/stable-$TARGET.sccache
       - task: PublishPipelineArtifact@0
         inputs:
           artifactName: sccache_$(TARGET) 
