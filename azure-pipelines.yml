@@ -7,15 +7,16 @@ jobs:
     strategy:
       matrix:
         x86_x64_stable:
+          HOST: x86_64-pc-windows-msvc
           TARGET: x86_64-pc-windows-msvc
     pool:
       vmImage: vs2017-win2016
     steps:
       - powershell: Invoke-WebRequest -Uri https://win.rustup.rs/ -OutFile rustup-init.exe
       - script: |
-          rustup-init.exe -y --default-host %TARGET%
+          rustup-init.exe -y --default-host %HOST%
           set PATH=%PATH%;%USERPROFILE%\.cargo\bin
-          cargo build --features=%CARGO_FEATURES% --release
+          cargo build --target %TARGET% --features=%CARGO_FEATURES% --release
           mkdir drop
           move target\release\sccache.exe drop\stable-$TARGET.sccache.exe
           move target\release\sccache.pdb drop\
@@ -29,18 +30,28 @@ jobs:
       matrix:
         x86_x64_stable:
           IMAGE: ubuntu-16.04
+          HOST: x86_64-unknown-linux-gnu
           TARGET: x86_64-unknown-linux-gnu
+        x86_x64_musl_stable:
+          IMAGE: ubuntu-16.04
+          HOST: x86_64-unknown-linux-gnu
+          TARGET: x86_64-unknown-linux-musl
         osx:
           IMAGE: macos-10.13
+          HOST: x86_64-apple-darwin
           TARGET: x86_64-apple-darwin
     pool:
       vmImage: $[ variables['IMAGE'] ] 
     steps:
       - script: |
-          curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host $TARGET
+          sudo apt install musl-tools
+        condition: eq(variables['TARGET'],'x86_64-unknown-linux-musl')
+      - script: |
+          curl https://sh.rustup.rs -sSf | sh -s -- -y --default-host $HOST
           export PATH=$PATH:~/.cargo/bin
+          rustup target add $TARGET
           export OPENSSL_STATIC=yes
-          cargo build --features=$CARGO_FEATURES --release
+          cargo build --target $TARGET --features=$CARGO_FEATURES --release
           mkdir drop
           mv target/release/sccache ./drop/stable-$TARGET.sccache
       - task: PublishPipelineArtifact@0
